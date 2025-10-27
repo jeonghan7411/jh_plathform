@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: auth
+  datasource:
+    url: jdbc:mariadb://mariadb:3307/authdb
+    username: authuser
+    password: authpass
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  mybatis:
+    mapper-locations: classpath:/mappers/*.xml
+    type-aliases-package: jh_platform.auth.domain
+    configuration:
+      map-underscore-to-camel-case: true
+
+  jwt:
+    secret: "mySuperSecretKeyForJwtAuth1234567890"
+    expiration-minutes: 60

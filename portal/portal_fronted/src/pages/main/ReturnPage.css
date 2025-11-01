@@ -1,0 +1,164 @@
+.return-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.return-card {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.return-icon {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  animation: iconBounce 2s ease-in-out infinite;
+}
+
+@keyframes iconBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.return-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.return-message {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.return-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-direction: column;
+}
+
+.return-button {
+  padding: 0.875rem 1.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+}
+
+.return-button-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.return-button-primary:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+  transform: translateY(-2px);
+}
+
+.return-button-primary:active {
+  transform: translateY(0);
+}
+
+.return-button-secondary {
+  background: white;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+}
+
+.return-button-secondary:hover {
+  background: #f0f7ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.return-button-secondary:active {
+  transform: translateY(0);
+}
+
+.return-help {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.return-help p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.return-link {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: color 0.2s ease-in-out;
+}
+
+.return-link:hover {
+  color: #2563eb;
+}
+
+/* 반응형 디자인 */
+@media (min-width: 640px) {
+  .return-actions {
+    flex-direction: row;
+  }
+
+  .return-button {
+    width: auto;
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .return-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .return-title {
+    font-size: 1.5rem;
+  }
+
+  .return-message {
+    font-size: 0.9rem;
+  }
+}
+

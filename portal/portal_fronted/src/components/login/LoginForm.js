@@ -1,29 +1,41 @@
 import React, { useState } from 'react';
-import { loginApi } from '../../api/login/LoginApi';
+import { useAuth } from '../../hooks/useAuth';
 import './LoginForm.css';
 
 
 const LoginForm = ({ onLoginSuccess, onMoveSignup }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
+  
+  // TanStack Query + Zustand 통합 훅 사용
+  const { loginMutation } = useAuth();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setErrorMsg('');
 
-    try {
-      const data = await loginApi.login({ username, password });
-      if (data?.accessToken) {
-        localStorage.setItem('accessToken', data.accessToken);
-        onLoginSuccess();
-      } else {
-        setErrorMsg('로그인 실패: 토큰이 없습니다.');
+    // TanStack Query의 useMutation 사용
+    loginMutation.mutate(
+      { username, password },
+      {
+        onSuccess: (response) => {
+          if (response.success) {
+            // HttpOnly Cookie는 서버에서 자동 설정됨
+            // 사용자 정보는 Zustand에 저장됨
+            onLoginSuccess();
+          }
+        },
+        onError: (error) => {
+          // 에러는 이미 baseApi에서 처리됨
+          console.error('로그인 실패:', error.message);
+        },
       }
-    } catch (err) {
-      setErrorMsg('로그인 실패: 아이디 또는 비밀번호를 확인하세요.');
-    }
+    );
   };
+
+  // 에러 메시지 추출
+  const errorMsg = loginMutation.isError 
+    ? loginMutation.error.message 
+    : null;
 
   return (
     <div className="login-container">
@@ -48,8 +60,15 @@ const LoginForm = ({ onLoginSuccess, onMoveSignup }) => {
         />
 
         {errorMsg && <p className="login-error">{errorMsg}</p>}
+        {loginMutation.isPending && <p className="login-info">로그인 중...</p>}
 
-        <button type="submit" className="login-button">로그인</button>
+        <button 
+          type="submit" 
+          className="login-button"
+          disabled={loginMutation.isPending}
+        >
+          {loginMutation.isPending ? '로그인 중...' : '로그인'}
+        </button>
 
         {/* ✅ 로그인 카드 내부 하단에 회원가입 링크 추가 */}
         <div className="login-link">

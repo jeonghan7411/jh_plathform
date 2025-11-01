@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jh_platform.auth.mapper.UserMapper">
+
+    <select id="findByUsername" parameterType="string" resultType="jh_platform.auth.model.User">
+        SELECT
+            USER_ID
+            ,   USERNAME
+            ,   PASSWORD
+            ,   NAME
+            ,   EMAIL
+            ,   PHONE
+            ,   STATUS
+            ,   INIT_PW_YN
+        FROM TB_USER
+        WHERE USERNAME = #{username}
+    </select>
+
+    <insert id="insertUser" parameterType="jh_platform.auth.model.User">
+        INSERT INTO TB_USER (
+            USERNAME
+            ,   PASSWORD
+            ,   NAME
+            ,   EMAIL
+            ,   PHONE
+            ,   STATUS
+            ,   INIT_PW_YN
+            ,   REG_DT
+        ) VALUES (
+            #{username}
+            ,   #{password}
+            ,   #{name}
+            ,   #{email}
+            ,   #{phone}
+            ,   'ACTIVE'
+            ,   'Y'
+            ,   NOW()
+        )
+    </insert>
+
+</mapper>

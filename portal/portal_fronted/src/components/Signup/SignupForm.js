@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { signupApi } from '../../api/signup/SignupApi';
 import './SignupForm.css';
 
@@ -11,41 +12,53 @@ const SignupForm = ({ onSignupSuccess }) => {
     email: '',
     phone: ''
   });
-  const [errorMsg, setErrorMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+
+  // TanStack Query의 useMutation 사용 (서버 상태 관리)
+  const signupMutation = useMutation({
+    mutationFn: (userData) => signupApi.signup(userData),
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setErrorMsg('');
-    setSuccessMsg('');
 
     if (form.password !== form.confirmPassword) {
-      setErrorMsg('비밀번호가 일치하지 않습니다.');
       return;
     }
 
-    try {
-      const data = await signupApi.signup({
+    // TanStack Query Mutation 실행
+    signupMutation.mutate(
+      {
         username: form.username,
         password: form.password,
         name: form.name,
         email: form.email,
         phone: form.phone,
-      });
-
-      if (data) {
-        setSuccessMsg('회원가입이 완료되었습니다! 로그인 해주세요.');
-        setTimeout(() => onSignupSuccess(), 1500);
+      },
+      {
+        onSuccess: (response) => {
+          if (response.success) {
+            setTimeout(() => onSignupSuccess(), 1500);
+          }
+        },
       }
-    } catch (err) {
-      setErrorMsg('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
-    }
+    );
   };
+
+  // 에러 메시지 및 성공 메시지 추출
+  const errorMsg = signupMutation.isError 
+    ? signupMutation.error.message 
+    : form.password !== form.confirmPassword && form.confirmPassword
+    ? '비밀번호가 일치하지 않습니다.'
+    : null;
+
+  const successMsg = signupMutation.isSuccess 
+    ? signupMutation.data.message || '회원가입이 완료되었습니다! 로그인 해주세요.'
+    : null;
 
   return (
     <div className="signup-container">
@@ -107,7 +120,13 @@ const SignupForm = ({ onSignupSuccess }) => {
         {errorMsg && <p className="signup-message error">{errorMsg}</p>}
         {successMsg && <p className="signup-message success">{successMsg}</p>}
 
-        <button type="submit" className="signup-button">회원가입</button>
+        <button 
+          type="submit" 
+          className="signup-button"
+          disabled={signupMutation.isPending}
+        >
+          {signupMutation.isPending ? '가입 중...' : '회원가입'}
+        </button>
 
         <p className="signup-link" onClick={onSignupSuccess}>
           이미 계정이 있으신가요? 로그인하기

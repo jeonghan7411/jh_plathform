@@ -30,7 +30,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성화
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/signup", "/api/auth/login").permitAll() // 회원가입, 로그인만 인증 없이 허용
+                .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/auth/logout").permitAll() // 인증 없이 허용 (쿠키만 삭제)
                 .anyRequest().authenticated() // 나머지는 JWT 필터에서 자동 검증
             )
             .cors(cors -> cors.disable()); // CORS는 WebConfig에서 처리

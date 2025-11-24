@@ -1,0 +1,3 @@
+cors:
+  allowed-origins: "https://example.com"
+

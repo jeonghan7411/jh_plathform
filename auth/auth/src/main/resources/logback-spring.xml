@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 콘솔 출력 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- MyBatis SQL 로깅 - 깔끔한 포맷 -->
+    <!-- additivity="false"로 설정하여 상위 로거로 전파하지 않음 (중복 출력 방지) -->
+    <logger name="jh_platform.auth.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <!-- MyBatis 내부 로그는 숨김 -->
+    <logger name="org.apache.ibatis" level="WARN" />
+    <logger name="org.springframework.jdbc" level="WARN" />
+    <logger name="org.springframework.transaction" level="WARN" />
+
+    <!-- 루트 로거 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
+

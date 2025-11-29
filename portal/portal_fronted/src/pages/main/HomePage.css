@@ -54,8 +54,32 @@
   font-size: 18px;
 }
 
-.logout-button {
+.user-actions {
+  display: flex;
+  gap: 12px;
   margin-top: 20px;
+}
+
+.dashboard-button {
+  flex: 1;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.logout-button {
+  flex: 1;
   padding: 12px 24px;
   background-color: #dc3545;
   color: white;

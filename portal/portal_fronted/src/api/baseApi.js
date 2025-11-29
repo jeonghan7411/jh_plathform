@@ -25,40 +25,32 @@ api.interceptors.request.use(
 
 // 응답 인터셉터 - 토큰 만료 처리 및 에러 응답 처리
 api.interceptors.response.use(
-  (response) => {
-    // 성공 응답은 response.data를 반환 (ApiResponse 형식)
-    return response.data;
-  },
-  (error) => {
-    // 에러 응답 처리
-    if (error.response) {
-      // 백엔드에서 보낸 에러 응답 (ApiResponse 형식)
-      const apiError = error.response.data;
-      
-      // 401 에러인 경우 (인증 실패)
-      if (error.response.status === 401) {
-        // HttpOnly Cookie 방식에서는 쿠키가 서버에서 관리되므로
-        // 프론트엔드에서는 쿠키 삭제 불필요
-        // 로그인 페이지가 아닐 때만 리다이렉트
-        if (!window.location.pathname.includes('/login')) {
-          window.location.href = '/login';
-        }
+  (response) => response.data,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // 401이고, 아직 리프레시 시도 안 했고, auth 관련 엔드포인트가 아닐 때
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url.includes('/api/auth/login') &&
+      !originalRequest.url.includes('/api/auth/signup')
+    ) {
+      originalRequest._retry = true;
+      try {
+        // 1) refresh 호출
+        await api.post('/api/auth/refresh');
+        // 2) 새 access 토큰이 쿠키에 들어갔으니 원래 요청 재시도
+        return api(originalRequest);
+      } catch (refreshError) {
+        // 리프레시도 실패 → 클라이언트 상태 정리 후 로그인 페이지로
+        // useAuthStore.getState().logout();
+        // window.location.href = '/';
+        return Promise.reject(refreshError);
       }
-      
-      // ApiResponse 형식의 에러를 그대로 반환하여 catch에서 처리할 수 있도록 함
-      return Promise.reject({
-        isApiError: true,
-        ...apiError, // success, code, message, data를 포함
-      });
     }
-    
-    // 네트워크 에러 등 응답이 없는 경우
-    return Promise.reject({
-      isApiError: false,
-      success: false,
-      code: 500,
-      message: '네트워크 오류가 발생했습니다.',
-    });
+
+    return Promise.reject(error);
   }
 );
 

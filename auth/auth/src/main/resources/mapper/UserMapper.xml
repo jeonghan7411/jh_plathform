@@ -3,7 +3,24 @@
 
 <mapper namespace="jh_platform.auth.mapper.UserMapper">
 
+    <!-- 사용자 정보 조회 (비밀번호 제외) - 일반 조회용 -->
     <select id="findByUsername" parameterType="string" resultType="jh_platform.auth.model.User">
+        /* UserMapper.findByUsername */
+        SELECT
+            USER_ID
+            ,   USERNAME
+            ,   NAME
+            ,   EMAIL
+            ,   PHONE
+            ,   STATUS
+            ,   INIT_PW_YN
+        FROM TB_USER
+        WHERE USERNAME = #{username}
+    </select>
+
+    <!-- 로그인 검증용 사용자 정보 조회 (비밀번호 포함) - 로그인 시에만 사용 -->
+    <select id="findByUsernameForLogin" parameterType="string" resultType="jh_platform.auth.model.User">
+        /* UserMapper.findByUsernameForLogin */
         SELECT
             USER_ID
             ,   USERNAME
@@ -18,6 +35,9 @@
     </select>
 
     <insert id="insertUser" parameterType="jh_platform.auth.model.User">
+
+        /* UserMapper.insertUser */
+
         INSERT INTO TB_USER (
             USERNAME
             ,   PASSWORD

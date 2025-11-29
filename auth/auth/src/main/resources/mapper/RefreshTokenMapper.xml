@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jh_platform.auth.mapper.RefreshTokenMapper">
+
+    <resultMap id="refreshTokenMap" type="jh_platform.auth.model.RefreshToken">
+        <id     property="username"     column="USERNAME"/>
+        <result property="refreshToken" column="REFRESH_TOKEN"/>
+        <result property="expiresAt"    column="EXPIRES_AT"/>
+        <result property="revokedYn"    column="REVOKED_YN"/>
+        <result property="regDt"        column="REG_DT"/>
+        <result property="upDt"        column="UPD"/>
+    </resultMap>
+
+    <select id="findByUsername" parameterType="string" resultMap="refreshTokenMap">
+        /* RefreshTokenMapper.findByUsername */
+        SELECT
+            USERNAME
+            ,   REFRESH_TOKEN
+            ,   EXPIRES_AT
+            ,   REVOKED_YN
+            ,   REG_DT
+            ,   MOD_DT
+        FROM TB_USER_REFRESH_TOKEN
+        WHERE USERNAME = #{username}
+    </select>
+
+    <!-- 로그인 성공 시 INSERT 또는 UPDATE (USERNAME 기준) -->
+    <insert id="upsertRefreshToken" parameterType="jh_platform.auth.model.RefreshToken">
+        /* RefreshTokenMapper.upsertRefreshToken */
+
+        INSERT INTO TB_USER_REFRESH_TOKEN (
+            USERNAME
+            ,   REFRESH_TOKEN
+            ,   EXPIRES_AT
+            ,   REVOKED_YN
+            ,   REG_DT
+            ,   UPD_DT
+        ) VALUES
+        (
+            #{username}
+            ,   #{refreshToken}
+            ,   #{expiresAt}
+            ,   #{revokedYn}
+            ,   NOW()
+            ,   NOW()
+         )
+        ON DUPLICATE KEY UPDATE
+            REFRESH_TOKEN = VALUES(REFRESH_TOKEN)
+            ,   EXPIRES_AT    = VALUES(EXPIRES_AT)
+            ,   REVOKED_YN    = VALUES(REVOKED_YN)
+            ,   UPD_DT        = NOW()
+    </insert>
+
+    <delete id="deleteByUsername" parameterType="string">
+        /* RefreshTokenMapper.deleteByUsername */
+        DELETE FROM
+            TB_USER_REFRESH_TOKEN
+        WHERE USERNAME = #{username}
+    </delete>
+
+</mapper>

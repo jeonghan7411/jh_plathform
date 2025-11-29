@@ -39,8 +39,12 @@ public class JwtTokenProvider {
      * application.yml에서 주입받습니다.
      * 예: 3600000 = 1시간
      */
-    @Value("${spring.jwt.validation-seconds}")
-    private Long validityInMs;
+    @Value("${spring.jwt.access-validation-millis}")
+    private Long accessValidityInMs;
+
+    @Value("${spring.jwt.refresh-validation-millis}")
+    private Long refreshValidityInMs;
+
 
     /**
      * 문자열 비밀키를 JWT 서명에 사용할 수 있는 Key 객체로 변환
@@ -58,6 +62,16 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
+    //  accessToken 생성
+    public String createAccessToken(String username) {
+        return createToken(username, accessValidityInMs);
+    }
+
+    //  refreshToken 생성
+    public String createRefreshToken(String username) {
+        return createToken(username, refreshValidityInMs);
+    }
+
     /**
      * 사용자명을 기반으로 JWT 토큰을 생성합니다.
      * 
@@ -70,7 +84,7 @@ public class JwtTokenProvider {
      * @param username 토큰에 포함할 사용자명 (subject)
      * @return 생성된 JWT 토큰 문자열 (Base64 URL-safe 인코딩됨)
      */
-    public String createToken(String username) {
+    public String createToken(String username, Long validityInMs) {
         // Claims: JWT의 Payload 부분에 포함될 데이터들
         // setSubject: 사용자를 식별하는 고유한 값 (일반적으로 username 사용)
         Claims claims = Jwts.claims().setSubject(username);

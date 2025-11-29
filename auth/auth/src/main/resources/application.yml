@@ -11,7 +11,8 @@ spring:
   jwt:
     secret: "mySuperSecretKeyForJwtAuth1234567890"
     expiration-minutes: 60
-    validation-seconds: 3600000
+    access-validation-millis: 3600000    #1시간
+    refresh-validation-millis: 604800000 #7일
 
 
 mybatis:
@@ -19,3 +20,33 @@ mybatis:
   #    type-aliases-package: jh_platform.auth.model
   configuration:
     map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl  # SLF4J 기반 로깅 (깔끔한 출력)
+
+# 로깅 설정
+logging:
+  level:
+    root: INFO
+    # MyBatis SQL 로깅 (매퍼별로 설정)
+    jh_platform.auth.mapper: DEBUG  # SQL 쿼리와 파라미터만 출력
+    org.apache.ibatis: INFO  # MyBatis 내부 로그는 숨김
+    org.springframework.jdbc: INFO  # JDBC 관련 로그는 숨김
+
+security:
+  permit-all-paths:
+    - /api/auth/signup
+    - /api/auth/login
+    - /api/auth/logout
+    - /api/auth/refresh
+
+cors:
+  allowed-origins:
+    - http://localhost:3000
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+  max-age: 3600

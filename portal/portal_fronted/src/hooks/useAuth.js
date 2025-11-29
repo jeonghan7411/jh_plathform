@@ -15,9 +15,21 @@ export function useAuth() {
   const loginMutation = useMutation({
     mutationFn: async (credentials) => {
       // 로그인 API 호출
-    //   const loginResponse = await loginApi.login(credentials);
-      
       return await loginApi.login(credentials);
+    },
+    onSuccess: async () => {
+      // 로그인 성공 시 사용자 정보 자동 조회
+      try {
+        const response = await loginApi.getUserInfo();
+        if (response.success && response.data) {
+          // Zustand에 사용자 정보 저장 (클라이언트 상태)
+          setUser(response.data);
+          // TanStack Query 캐시에도 저장
+          queryClient.setQueryData(['user'], response.data);
+        }
+      } catch (error) {
+        console.error('사용자 정보 조회 실패:', error);
+      }
     },
   });
 

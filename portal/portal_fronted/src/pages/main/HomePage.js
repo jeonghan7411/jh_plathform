@@ -33,6 +33,11 @@ const HomePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 마운트 시 한 번만 실행
 
+  // 대시보드로 이동
+  const handleGoToDashboard = () => {
+    navigate("/dashboard");
+  };
+
   // 로그아웃 핸들러
   const handleLogout = () => {
     logoutMutation.mutate(undefined, {
@@ -63,13 +68,21 @@ const HomePage = () => {
             <p><strong>이메일:</strong> {user?.email || userData?.email || "미입력"}</p>
             <p><strong>전화번호:</strong> {user?.phone || userData?.phone || "미입력"}</p>
           </div>
-          <button 
-            onClick={handleLogout} 
-            className="logout-button"
-            disabled={logoutMutation.isPending}
-          >
-            {logoutMutation.isPending ? "로그아웃 중..." : "로그아웃"}
-          </button>
+          <div className="user-actions">
+            <button 
+              onClick={handleGoToDashboard} 
+              className="dashboard-button"
+            >
+              대시보드로 이동
+            </button>
+            <button 
+              onClick={handleLogout} 
+              className="logout-button"
+              disabled={logoutMutation.isPending}
+            >
+              {logoutMutation.isPending ? "로그아웃 중..." : "로그아웃"}
+            </button>
+          </div>
         </div>
       ) : (
         <div className="not-logged-in">

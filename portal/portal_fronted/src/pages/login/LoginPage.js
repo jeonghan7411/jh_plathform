@@ -9,15 +9,15 @@ const LoginPage = () => {
   // Zustand에서 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
 
-  // 이미 로그인되어 있으면 /main으로 리다이렉트
+  // 이미 로그인되어 있으면 /dashboard로 리다이렉트
   useEffect(() => {
     if (user) {
-      navigate('/main', { replace: true });
+      navigate('/dashboard', { replace: true });
     }
   }, [user, navigate]);
 
   const handleLoginSuccess = () => {
-    navigate('/main');
+    navigate('/dashboard');
   };
 
   const handleMoveSignup = () => {

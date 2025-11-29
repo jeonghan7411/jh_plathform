@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # 프론트엔드 (Nginx)
+  portal-frontend:
+    build:
+      context: ./portal/portal_fronted
+      dockerfile: Dockerfile
+    container_name: portal-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-service
+    networks:
+      - jh-platform-network
+    restart: unless-stopped
+
+  # Auth 서비스 (Spring Boot)
+  auth-service:
+    build:
+      context: ./auth/auth
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://auth-db:3306/authdb
+      - SPRING_DATASOURCE_USERNAME=authuser
+      - SPRING_DATASOURCE_PASSWORD=authpass
+      - SPRING_JWT_SECRET=mySuperSecretKeyForJwtAuth1234567890
+      - SPRING_JWT_ACCESS_VALIDATION_MILLIS=3600000
+      - SPRING_JWT_REFRESH_VALIDATION_MILLIS=604800000
+    depends_on:
+      - auth-db
+    networks:
+      - jh-platform-network
+    restart: unless-stopped
+
+  # Auth 서비스 DB (MariaDB)
+  auth-db:
+    image: mariadb:10.11
+    container_name: auth-db
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=authdb
+      - MYSQL_USER=authuser
+      - MYSQL_PASSWORD=authpass
+    volumes:
+      - auth-db-data:/var/lib/mysql
+      - ./auth/테이블.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - jh-platform-network
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+networks:
+  jh-platform-network:
+    driver: bridge
+
+volumes:
+  auth-db-data:
+    driver: local
+

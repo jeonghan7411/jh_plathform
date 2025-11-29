@@ -1,5 +1,44 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://auth-db:3306/authdb
+    username: ${SPRING_DATASOURCE_USERNAME:authuser}
+    password: ${SPRING_DATASOURCE_PASSWORD:authpass}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jwt:
+    secret: ${SPRING_JWT_SECRET:mySuperSecretKeyForJwtAuth1234567890}
+    access-validation-millis: ${SPRING_JWT_ACCESS_VALIDATION_MILLIS:3600000}
+    refresh-validation-millis: ${SPRING_JWT_REFRESH_VALIDATION_MILLIS:604800000}
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+logging:
+  level:
+    root: INFO
+    jh_platform.auth.mapper: INFO  # 프로덕션에서는 SQL 로그 최소화
+
+security:
+  permit-all-paths:
+    - /api/auth/signup
+    - /api/auth/login
+    - /api/auth/logout
+    - /api/auth/refresh
+
 cors:
-  allowed-origins: "https://example.com"
+  allowed-origins:
+    - ${CORS_ALLOWED_ORIGIN:http://localhost}
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+  max-age: 3600
 
 
 

@@ -1,0 +1,23 @@
+# 환경 변수
+.env
+.env.local
+.env.production
+
+# Docker
+*.log
+
+# IDE
+.idea
+.vscode
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 빌드 결과물
+build/
+dist/
+*.jar
+*.war
+

@@ -51,8 +51,16 @@ docker-compose logs -f
 
 ## 📚 문서
 
+### 메인 가이드
+- **[마스터 가이드](./docs/MASTER_GUIDE.md)** ⭐ - 모든 내용을 종합한 메인 문서
+
+### 상세 문서
 - [아키텍처 문서](./docs/ARCHITECTURE.md) - 시스템 구조 및 설계
-- [배포 가이드](./docs/DEPLOYMENT.md) - Docker 배포 방법
+- [배포 가이드](./docs/DEPLOYMENT_GUIDE.md) - Docker 배포 완전 가이드
+- [새 프로젝트 추가](./docs/ADDING_NEW_PROJECT.md) - 새 프로젝트 추가 방법
+- [도메인 설정](./docs/DOMAIN_SETUP.md) - 도메인 및 SSL 설정
+- [외부 접속 설정](./docs/EXTERNAL_ACCESS.md) - 외부 IP 접속 설정
+- [데이터베이스 문제 해결](./docs/DATABASE_TROUBLESHOOTING.md) - DB 관련 문제 해결
 
 ## 🛠️ 기술 스택
 

@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .requestMatchers(securityProperties.getPermitAllPathsArray()).permitAll() // 인증 없이 허용 (yml에서 관리)
                 .anyRequest().authenticated() // 나머지는 JWT 필터에서 자동 검증
             )
-            .cors(cors -> cors.disable()); // CORS는 WebConfig에서 처리
+            .cors(); // CORS는 WebConfig에서 처리
 
         return http.build();
     }

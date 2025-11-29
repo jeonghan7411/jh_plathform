@@ -1,5 +1,5 @@
 # React 앱 빌드 단계
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
@@ -7,7 +7,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # 의존성 설치
-RUN npm ci
+# package-lock.json이 동기화되지 않은 경우를 대비해 npm install 사용
+RUN npm install
 
 # 소스 코드 복사
 COPY . .

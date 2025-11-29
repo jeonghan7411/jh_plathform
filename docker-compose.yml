@@ -31,6 +31,9 @@ services:
       - SPRING_JWT_SECRET=mySuperSecretKeyForJwtAuth1234567890
       - SPRING_JWT_ACCESS_VALIDATION_MILLIS=3600000
       - SPRING_JWT_REFRESH_VALIDATION_MILLIS=604800000
+      # CORS 설정 (외부 접속 IP:포트로 변경 필요)
+      # 예: CORS_ALLOWED_ORIGIN=http://192.168.1.100:8181
+      - CORS_ALLOWED_ORIGIN=${CORS_ALLOWED_ORIGIN:-http://localhost}
     depends_on:
       - auth-db
     networks:

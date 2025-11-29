@@ -30,6 +30,8 @@ security:
 cors:
   allowed-origins:
     - ${CORS_ALLOWED_ORIGIN:http://localhost}
+    # 외부 접속을 위한 설정 (환경 변수로 설정 가능)
+    # 예: CORS_ALLOWED_ORIGIN=http://외부IP:8181
   allowed-methods:
     - GET
     - POST

@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+// 상대 경로로 API 요청 (Nginx 프록시 사용)
+// 환경 변수가 설정되어 있지 않으면 '/api' 사용 (같은 도메인)
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || '/api',
+  baseURL: '/api',  // 항상 상대 경로 사용 (Nginx 프록시 통해 auth-service로 전달)
   headers: {
     'Content-Type': 'application/json',
   },

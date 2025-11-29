@@ -17,7 +17,7 @@ COPY src ./src
 RUN gradle build -x test --no-daemon
 
 # 실행 단계
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 

@@ -25,6 +25,29 @@ api.interceptors.request.use(
   }
 );
 
+// 에러 메시지 추출 헬퍼 함수
+const extractErrorMessage = (error) => {
+  // 백엔드에서 반환한 에러 메시지 추출
+  // ApiResponse 형식: { success: false, code: 401, message: "비밀번호가 일치하지 않습니다." }
+  if (error.response?.data?.message) {
+    return error.response.data.message;
+  }
+
+  // 백엔드 메시지가 없는 경우 상태 코드별 기본 메시지 설정
+  const status = error.response?.status;
+  if (status === 401) {
+    return '인증에 실패했습니다.';
+  } else if (status === 403) {
+    return '아이디 또는 비밀번호를 확인하세요.';
+  } else if (status === 404) {
+    return '요청한 리소스를 찾을 수 없습니다.';
+  } else if (status === 500) {
+    return '서버 오류가 발생했습니다.';
+  }
+
+  return error.message || '요청 처리 중 오류가 발생했습니다.';
+};
+
 // 응답 인터셉터 - 토큰 만료 처리 및 에러 응답 처리
 api.interceptors.response.use(
   (response) => response.data,
@@ -45,15 +68,23 @@ api.interceptors.response.use(
         // 2) 새 access 토큰이 쿠키에 들어갔으니 원래 요청 재시도
         return api(originalRequest);
       } catch (refreshError) {
-        // 리프레시도 실패 → 클라이언트 상태 정리 후 로그인 페이지로
+        // 리프레시도 실패 → 백엔드 메시지 추출하여 반환
+        const errorMessage = extractErrorMessage(refreshError);
+        const customError = new Error(errorMessage);
+        customError.response = refreshError.response;
         // useAuthStore.getState().logout();
         // window.location.href = '/';
-        return Promise.reject(refreshError);
+        return Promise.reject(customError);
       }
     }
 
-    return Promise.reject(error);
+    // 일반 에러 처리: 백엔드 메시지 추출
+    const errorMessage = extractErrorMessage(error);
+    const customError = new Error(errorMessage);
+    customError.response = error.response;
+    return Promise.reject(customError);
   }
 );
 
 export default api;
+

@@ -15,6 +15,10 @@ const Header = () => {
     navigate("/admin");
   };
 
+  const handleGoToProfile = () => {
+    navigate("/dashboard/profile");
+  };
+
   const handleLogout = () => {
     logoutMutation.mutate(undefined, {
       onSuccess: () => {
@@ -29,10 +33,13 @@ const Header = () => {
         <h1 className="header-logo">Portal</h1>
       </div>
 
-      <div>
-        <div className="header-center">
-          {currentUser && (
-            <div className="user-info-header">
+      <div className="header-right">
+        {currentUser && (
+          <>
+            <button 
+              className="user-info-header user-info-button"
+              onClick={handleGoToProfile}
+            >
               <div className="user-avatar">
                 {currentUser.name?.charAt(0) || currentUser.username?.charAt(0) || "U"}
               </div>
@@ -40,29 +47,22 @@ const Header = () => {
                 <span className="user-name">{currentUser.name || currentUser.username}</span>
                 <span className="user-email">{currentUser.email || "이메일 미입력"}</span>
               </div>
-            </div>
-          )}
-        </div>
-
-        <div className="header-right">
-          {currentUser && (
-            <>
-              <button 
-                className="header-button admin-button"
-                onClick={handleGoToAdmin}
-              >
-                관리자
-              </button>
-              <button 
-                className="header-button logout-button"
-                onClick={handleLogout}
-                disabled={logoutMutation.isPending}
-              >
-                {logoutMutation.isPending ? "로그아웃 중..." : "로그아웃"}
-              </button>
-            </>
-          )}
-        </div>
+            </button>
+            <button 
+              className="header-button admin-button"
+              onClick={handleGoToAdmin}
+            >
+              관리자
+            </button>
+            <button 
+              className="header-button logout-button"
+              onClick={handleLogout}
+              disabled={logoutMutation.isPending}
+            >
+              {logoutMutation.isPending ? "로그아웃 중..." : "로그아웃"}
+            </button>
+          </>
+        )}
       </div>
     </header>
   );

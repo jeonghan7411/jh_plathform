@@ -5,12 +5,14 @@ import { useAuthStore } from "../../store/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { projectApi } from "../../api/project/ProjectApi";
 import Header from "../../components/common/Header";
+import Sidebar from "../../components/common/Sidebar";
 import ReturnPage from "../main/ReturnPage";
 import "./DashboardPage.css";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   const hasFetchedRef = useRef(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
   
   // Zustand에서 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
@@ -89,8 +91,9 @@ const DashboardPage = () => {
   return (
     <div className="dashboard-container">
       <Header />
+      <Sidebar onToggle={setIsSidebarCollapsed} />
       
-      <div className="dashboard-content">
+      <div className={`dashboard-content ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
         <div className="dashboard-title-section">
           <h1 className="dashboard-title">대시보드</h1>
           <p className="dashboard-subtitle">프로젝트를 선택하여 시작하세요</p>

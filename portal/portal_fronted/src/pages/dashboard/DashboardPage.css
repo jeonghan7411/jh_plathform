@@ -1,12 +1,19 @@
 .dashboard-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
 }
 
 .dashboard-content {
   max-width: 1400px;
   margin: 0 auto;
+  margin-left: 250px;
   padding: 2rem;
+  transition: margin-left 0.3s ease;
+}
+
+.dashboard-content.sidebar-collapsed {
+  margin-left: 70px;
 }
 
 .dashboard-title-section {
@@ -181,6 +188,7 @@
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .dashboard-content {
+    margin-left: 70px;
     padding: 1rem;
   }
 

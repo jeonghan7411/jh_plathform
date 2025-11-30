@@ -5,6 +5,7 @@ import LoginPage from "./pages/login/LoginPage.js";
 import MainPage from "./pages/main/HomePage.js";
 import SignupPage from "./pages/Signup/SignupPage.js";
 import DashboardPage from "./pages/dashboard/DashboardPage.js";
+import ProfilePage from "./pages/dashboard/ProfilePage.js";
 import AdminPage from "./pages/admin/AdminPage.js";
 
 // TanStack Query 클라이언트 설정
@@ -34,6 +35,7 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/main" element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard/profile" element={<ProfilePage />} />
           <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </BrowserRouter>
